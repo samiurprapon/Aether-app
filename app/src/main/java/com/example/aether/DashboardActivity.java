@@ -11,7 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -20,16 +22,25 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.aether.api.RetrofitClient;
+import com.example.aether.api.models.Course;
+import com.example.aether.api.models.Courses;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.example.aether.adapter.CourseAdapter;
 import com.example.aether.callbacks.SwipeController;
-import com.example.aether.model.Course;
 import com.example.aether.onClickListeners.RecyclerItemClickListener;
 import com.example.aether.ui.GridSpacingItemDecoration;
+import com.google.firebase.auth.FirebaseAuth;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DashboardActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -97,7 +108,7 @@ public class DashboardActivity extends AppCompatActivity implements SearchView.O
 
                         Course course = courseArrayList.get(position);
                         Intent intent = new Intent(DashboardActivity.this, SlidesActivity.class);
-                        intent.putExtra("course", course);
+                        intent.putExtra("course", (Serializable) course);
 
                         // Toast.makeText(getApplicationContext(),"course clicked : "+course.getTitle(),Toast.LENGTH_SHORT).show();
 
@@ -140,6 +151,29 @@ public class DashboardActivity extends AppCompatActivity implements SearchView.O
     }
 
     private void fetchCourses() {
+        String uid = FirebaseAuth.getInstance().getUid();
+
+
+        Call<Courses> call = RetrofitClient.getInstance()
+                                .getRetroApi()
+                                .list(new Courses(uid));
+
+        call.enqueue(new Callback<Courses>() {
+            @Override
+            public void onResponse(@NonNull  Call<Courses> call, @NonNull Response<Courses> response) {
+
+                courses = response.body().getCourses();
+                courseArrayList.clear();
+                Collections.addAll(courseArrayList, courses);
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Courses> call, @NonNull Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error : ", Toast.LENGTH_LONG).show();
+
+            }
+        });
 
     }
 
@@ -204,7 +238,7 @@ public class DashboardActivity extends AppCompatActivity implements SearchView.O
         List<Course> newList = new ArrayList<>();
 
         for (Course course: courseArrayList) {
-            if (course.getCourse_name().toLowerCase().contains(userInput) || course.getCourse_code().toLowerCase().contains(userInput)) {
+            if (course.getEnrollCode().toLowerCase().contains(userInput)) {
                 newList.add(course);
             }
 

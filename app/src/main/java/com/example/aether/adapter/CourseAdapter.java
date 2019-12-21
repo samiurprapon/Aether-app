@@ -12,13 +12,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.aether.api.models.Course;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.aether.R;
-import com.example.aether.model.Course;
 
 /**
  * RecyclerView adapter class to render items
@@ -27,11 +27,9 @@ import com.example.aether.model.Course;
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHolder>  {
 
     private ArrayList<Course> courseList;
-    private Context context;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView mCourseTitle;
-        TextView mCourseDescription;
         ImageView thumbnail;
 
         MaterialCardView parentLayout;
@@ -39,7 +37,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHold
         MyViewHolder(View view) {
             super(view);
             mCourseTitle = view.findViewById(R.id.tv_course_title);
-            mCourseDescription = view.findViewById(R.id.tv_course_description);
             thumbnail = view.findViewById(R.id.thumbnail);
             parentLayout = view.findViewById(R.id.row_container);
         }
@@ -47,7 +44,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHold
 
 
     public CourseAdapter(Context context, ArrayList<Course> courseList) {
-        this.context = context;
         this.courseList = courseList;
     }
 
@@ -63,15 +59,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         final Course course = courseList.get(position);
-        holder.mCourseTitle.setText(course.getCourse_code());
-        holder.mCourseDescription.setText(course.getCourse_name());
-
-//        Glide.with(context)
-//                .load(mate.getImage())
-//                .placeholder(R.drawable.load)
-//                .into(holder.thumbnail);
-
-
+        holder.mCourseTitle.setText(String.valueOf(course.getEnrollCode()));
     }
 
     @Override
