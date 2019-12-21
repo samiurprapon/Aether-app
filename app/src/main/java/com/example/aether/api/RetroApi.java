@@ -1,5 +1,6 @@
 package com.example.aether.api;
 
+import com.example.aether.api.models.Enroll;
 import com.example.aether.api.models.NewUser;
 import com.example.aether.api.models.User;
 import com.example.aether.model.Auth;
@@ -17,6 +18,9 @@ public interface RetroApi {
 
     @POST("update")
     Call<NewUser> createProfile(@Body NewUser user);
+
+    @POST("course/join")
+    Call<Enroll> enroll(@Body Enroll enroll);
 
 
 }
