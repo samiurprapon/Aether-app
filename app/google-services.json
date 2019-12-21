@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "870313271970",
+    "firebase_url": "https://cse482-fall19.firebaseio.com",
+    "project_id": "cse482-fall19",
+    "storage_bucket": "cse482-fall19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870313271970:android:53bb6a380eb849dcb62dfb",
+        "android_client_info": {
+          "package_name": "com.example.aether"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870313271970-hd8nkt8fcn1ee5g8n4i27t04tulodkfq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aether",
+            "certificate_hash": "8ff54f61e3fc6c7c90072b1509bdac13d8e49cc7"
+          }
+        },
+        {
+          "client_id": "870313271970-t9uaboa00ns3hcgcrrer8blne6ourbv1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxGFVO6aT6a7xGtyCif1lra3Dp_TfvaoU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870313271970-t9uaboa00ns3hcgcrrer8blne6ourbv1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

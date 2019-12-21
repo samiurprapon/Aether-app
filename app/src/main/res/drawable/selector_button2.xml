@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- When item pressed this item will be triggered -->
+    <item android:state_pressed="true"
+        android:drawable="@drawable/img_sign_in" />
+
+    <!-- By default the background will be this item -->
+    <item android:drawable="@drawable/img_sign_up"/>
+
+</selector>
