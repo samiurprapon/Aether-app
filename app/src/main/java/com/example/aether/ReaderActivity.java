@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.aether.model.Course;
+import com.example.aether.model.Slide;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnErrorListener;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
@@ -34,8 +36,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.example.aether.model.Course;
-import com.example.aether.model.Slide;
 
 public class ReaderActivity extends AppCompatActivity implements OnPageChangeListener, OnLoadCompleteListener,
         OnPageErrorListener {
@@ -52,15 +52,6 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reader);
-
-
-        // test
-//        slide = new Slide();
-//        slide.setAddress("http://maven.apache.org/maven-1.x/maven.pdf");
-//        slide.setTitle("Lecture 1");
-//
-//        course  = new Course();
-//        course.setTitle("CSE327");
 
          slide = (Slide) getIntent().getSerializableExtra("slide");
          course = (Course) getIntent().getSerializableExtra("course");
@@ -95,7 +86,7 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
     }
 
     public void download(Course course, Slide slide) {
-        String fileName = course.getCourse_code()+"-"+slide.getTitle()+".pdf";
+        String fileName = course.getCourseId()+"-"+slide.getTitle()+".pdf";
 
         new DownloadFile().execute(slide.getUrl(), fileName);
         Toast.makeText(ReaderActivity.this, "Downloading...", Toast.LENGTH_SHORT).show();
@@ -105,7 +96,7 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
     private File loadDocument(Course course, Slide slide) {
         File filePath = Environment.getExternalStorageDirectory();
         File directory = new File (filePath.getAbsolutePath()+"/aether/");
-        String fileName = course.getCourse_code()+"-"+slide.getTitle()+".pdf";
+        String fileName = course.getCourseId()+"-"+slide.getTitle()+".pdf";
 
         if (directory.exists()) {
             File check = new File(directory, fileName);
@@ -159,7 +150,7 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
             Log.v(TAG, "doInBackground() Method invoked ");
 
             String fileUrl = slide.getUrl();
-            String fileName = course.getCourse_code()+"-"+slide.getTitle()+".pdf";
+            String fileName = course.getCourseId()+"-"+slide.getTitle()+".pdf";
 
             File filePath = Environment.getExternalStorageDirectory();
             File directory = new File (filePath.getAbsolutePath()+"/aether/");

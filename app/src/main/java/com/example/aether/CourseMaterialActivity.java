@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.aether.adapter.SlideAdapter;
-import com.example.aether.callbacks.SwipeController;
 import com.example.aether.model.Slide;
+import com.example.aether.callbacks.SwipeController;
 import com.example.aether.onClickListeners.RecyclerItemClickListener;
 import com.example.aether.ui.GridSpacingItemDecoration;
 

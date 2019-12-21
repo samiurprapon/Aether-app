@@ -1,4 +1,4 @@
-package com.example.aether.api.models;
+package com.example.aether.model;
 
 public class Enroll {
     private String uid;

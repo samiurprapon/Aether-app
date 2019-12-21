@@ -18,7 +18,7 @@ import com.example.aether.DashboardActivity;
 import com.example.aether.ProfileActivity;
 import com.example.aether.R;
 import com.example.aether.api.RetrofitClient;
-import com.example.aether.api.models.User;
+import com.example.aether.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

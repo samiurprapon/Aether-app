@@ -11,21 +11,30 @@ import android.os.Handler;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import java.util.ArrayList;
-
 import com.example.aether.adapter.SlideAdapter;
+import com.example.aether.api.RetrofitClient;
 import com.example.aether.callbacks.SwipeController;
 import com.example.aether.model.Course;
 import com.example.aether.model.Slide;
+import com.example.aether.model.Slides;
 import com.example.aether.onClickListeners.RecyclerItemClickListener;
 import com.example.aether.ui.GridSpacingItemDecoration;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SlidesActivity extends Activity {
 
@@ -34,6 +43,7 @@ public class SlidesActivity extends Activity {
     private Slide[] slides;
     private SlideAdapter mAdapter;
     private Course course;
+    private int courseId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +51,7 @@ public class SlidesActivity extends Activity {
         setContentView(R.layout.activity_slides);
 
         course = (Course) getIntent().getSerializableExtra("course");
+        courseId = course.getCourseId();
 
         TextView mCourseTitle = findViewById(R.id.tv_course_name);
         swipeRefreshLayout = findViewById(R.id.simpleSwipeRefreshLayout);
@@ -48,7 +59,7 @@ public class SlidesActivity extends Activity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         mAdapter = new SlideAdapter(this, slideArrayList);
-        mCourseTitle.setText(course.getCourse_name());
+        mCourseTitle.setText(course.getEnrollCode());
 
 
         SwipeController swipeController = new SwipeController();
@@ -86,8 +97,8 @@ public class SlidesActivity extends Activity {
 
                         Slide slide = slideArrayList.get(position);
                         Intent intent = new Intent(SlidesActivity.this, ReaderActivity.class);
-                        intent.putExtra("slide", slide);
                         intent.putExtra("course", course);
+                        intent.putExtra("slide", slide);
 
                         //Toast.makeText(getApplicationContext(),"Slide clicked : "+slide.getTitle(),Toast.LENGTH_SHORT).show();
 
@@ -130,32 +141,29 @@ public class SlidesActivity extends Activity {
     }
 
     private void fetchSlides() {
-//        int course_id = course.getCourse_id();
-//        Call<SlideResponse> call = RetrofitClient.getInstance()
-//                .getRetroApi()
-//                .slideList(course_id);
-//
-//        call.enqueue(new Callback<SlideResponse>() {
-//            @Override
-//            public void onResponse(@NonNull Call<SlideResponse> call, @NonNull retrofit2.Response<SlideResponse> objectResponseResponse) {
-//
-//                SlideResponse response = objectResponseResponse.body();
-//
-//                if (response != null && !response.isError()) {
-//
-//                    slides = response.getSlides();
-//
-//                    slideArrayList.clear();
-//                    Collections.addAll(slideArrayList, slides);
-//                    mAdapter.notifyDataSetChanged();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(@NonNull Call<SlideResponse> call, @NonNull Throwable t) {
-//
-//            }
-//        });
+
+        Call<Slides> call = RetrofitClient.getInstance()
+                .getRetroApi()
+                .slideList(new Course(courseId));
+
+        call.enqueue(new Callback<Slides>() {
+            @Override
+            public void onResponse(@NonNull Call<Slides> call, @NonNull Response<Slides> response) {
+
+                if(response.body() != null) {
+                    slides = response.body().getSlides();
+                    slideArrayList.clear();
+                    Collections.addAll(slideArrayList, slides);
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Slides> call, @NonNull Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error : ", Toast.LENGTH_LONG).show();
+
+            }
+        });
 
     }
 

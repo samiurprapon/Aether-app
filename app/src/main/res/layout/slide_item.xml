@@ -37,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="0dp"
-                android:layout_weight="4"
+                android:layout_weight="5"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -47,32 +47,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
-                    android:paddingStart="8dp"
+                    android:paddingStart="16dp"
                     android:paddingEnd="8dp"
                     android:textColor="@android:color/black"
-                    android:textSize="14sp"
+                    android:textSize="26sp"
                     android:textStyle="bold" />
 
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:background="@android:color/white"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:maxEms="20"
-                    android:textSize="22sp" />
 
             </LinearLayout>
         </LinearLayout>

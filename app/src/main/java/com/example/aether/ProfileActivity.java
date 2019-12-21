@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.aether.api.RetrofitClient;
-import com.example.aether.api.models.NewUser;
+import com.example.aether.model.NewUser;
 import com.google.firebase.auth.FirebaseAuth;
 
 import retrofit2.Call;

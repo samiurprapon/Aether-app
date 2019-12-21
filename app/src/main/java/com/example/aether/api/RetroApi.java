@@ -1,10 +1,11 @@
 package com.example.aether.api;
 
-import com.example.aether.api.models.Course;
-import com.example.aether.api.models.Courses;
-import com.example.aether.api.models.Enroll;
-import com.example.aether.api.models.NewUser;
-import com.example.aether.api.models.User;
+import com.example.aether.model.Course;
+import com.example.aether.model.Courses;
+import com.example.aether.model.Enroll;
+import com.example.aether.model.NewUser;
+import com.example.aether.model.Slides;
+import com.example.aether.model.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,6 +23,9 @@ public interface RetroApi {
 
     @POST("course/list")
     Call<Courses> list(@Body Courses courses);
+
+    @POST("course/slide/")
+    Call<Slides> slideList(@Body Course course);
 
 
 }

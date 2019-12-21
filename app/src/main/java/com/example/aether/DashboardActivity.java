@@ -23,8 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.aether.api.RetrofitClient;
-import com.example.aether.api.models.Course;
-import com.example.aether.api.models.Courses;
+import com.example.aether.model.Course;
+import com.example.aether.model.Courses;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
@@ -108,7 +108,7 @@ public class DashboardActivity extends AppCompatActivity implements SearchView.O
 
                         Course course = courseArrayList.get(position);
                         Intent intent = new Intent(DashboardActivity.this, SlidesActivity.class);
-                        intent.putExtra("course", (Serializable) course);
+                        intent.putExtra("course", course);
 
                         // Toast.makeText(getApplicationContext(),"course clicked : "+course.getTitle(),Toast.LENGTH_SHORT).show();
 
@@ -162,10 +162,13 @@ public class DashboardActivity extends AppCompatActivity implements SearchView.O
             @Override
             public void onResponse(@NonNull  Call<Courses> call, @NonNull Response<Courses> response) {
 
-                courses = response.body().getCourses();
-                courseArrayList.clear();
-                Collections.addAll(courseArrayList, courses);
-                mAdapter.notifyDataSetChanged();
+                if(response.body() != null) {
+                    courses = response.body().getCourses();
+
+                    courseArrayList.clear();
+                    Collections.addAll(courseArrayList, courses);
+                    mAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
