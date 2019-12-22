@@ -11,11 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.aether.api.RetrofitClient;
 import com.example.aether.model.Course;
+import com.example.aether.model.Session;
 import com.example.aether.model.Slide;
+import com.example.aether.model.Slides;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.github.barteksc.pdfviewer.listener.OnErrorListener;
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener;
@@ -28,6 +32,7 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +40,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ReaderActivity extends AppCompatActivity implements OnPageChangeListener, OnLoadCompleteListener,
@@ -47,7 +61,6 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
     int currentPageNumber = 1;
     Slide slide;
     Course course;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,6 +193,11 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
 
         private final float THRESHOLD = 0.75f;
 
+        String startTime = null;
+        String endTime = null;
+        int flag = -99;
+
+
         private EyesTracker() {
 
         }
@@ -187,7 +205,15 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
         @Override
         public void onUpdate(Detector.Detections<Face> detections, Face face) {
             if (face.getIsLeftEyeOpenProbability() > THRESHOLD || face.getIsRightEyeOpenProbability() > THRESHOLD) {
+                if(startTime == null && flag == -99) {
+                    startTime = getCurrentTimeStamp();
+                    Log.i(TAG, "Start Time: "+startTime);
+                    flag = 0;
+
+                }
                 Log.i(TAG, "onUpdate: Eyes Detected");
+
+
                 showStatus(0);  // "Eyes Detected and open"
             }
             else {
@@ -198,6 +224,15 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
         @Override
         public void onMissing(Detector.Detections<Face> detections) {
             super.onMissing(detections);
+            if(startTime != null){
+                endTime = getCurrentTimeStamp();
+                Log.i(TAG, "End Time: "+endTime);
+                importReadingSession(currentPageNumber, startTime, endTime);
+                flag = -99;
+                startTime = null;
+                endTime = null;
+
+            }
             showStatus(2);  // "Face Not Detected yet!"
         }
 
@@ -322,22 +357,58 @@ public class ReaderActivity extends AppCompatActivity implements OnPageChangeLis
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
                 if (situation == 0) {
                     // "Eyes Detected and open"
                     mCheckEyes.setImageResource(R.drawable.ic_eye_looking);
-                    importReadingSession(currentPageNumber);
+
                 } else if (situation == 1){
                     // "Eyes Detected and closed"
                     mCheckEyes.setImageResource(R.drawable.ic_close_eye);
                 } else if (situation == 2) {
                     // "Face Not Detected yet!"
                     mCheckEyes.setImageResource(R.drawable.ic_eye_not_found);
+
                 }
+
             }
         });
     }
 
-    private void importReadingSession(int page) {
+
+    private void importReadingSession(int page, String startTime, String endTime) {
         // call the api and sent it to the server
+
+        Call<Session> call = RetrofitClient.getInstance()
+                .getRetroApi()
+                .reading(new Session(slide.getId(), FirebaseAuth.getInstance().getUid(),currentPageNumber, startTime, endTime));
+
+        call.enqueue(new Callback<Session>() {
+            @Override
+            public void onResponse(@NonNull Call<Session> call, @NonNull Response<Session> response) {
+
+                if(response.body() != null) {
+                    Toast.makeText(ReaderActivity.this, "Updated!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Session> call, @NonNull Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error : ", Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    private String getCurrentTimeStamp(){
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            return dateFormat.format(new Date());
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
     }
 }

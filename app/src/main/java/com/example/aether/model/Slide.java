@@ -21,4 +21,8 @@ public class Slide implements Serializable {
     public String getTitle() {
         return title;
     }
+
+    public int getId() {
+        return id;
+    }
 }

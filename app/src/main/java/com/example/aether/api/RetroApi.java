@@ -4,6 +4,7 @@ import com.example.aether.model.Course;
 import com.example.aether.model.Courses;
 import com.example.aether.model.Enroll;
 import com.example.aether.model.NewUser;
+import com.example.aether.model.Session;
 import com.example.aether.model.Slides;
 import com.example.aether.model.User;
 
@@ -26,6 +27,9 @@ public interface RetroApi {
 
     @POST("course/slide/")
     Call<Slides> slideList(@Body Course course);
+
+    @POST("course/slide/session/")
+    Call<Session> reading (@Body Session session);
 
 
 }
