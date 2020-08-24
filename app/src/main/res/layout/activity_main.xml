@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true"
     android:orientation="vertical"
-    tools:context=".EyesActivity">
+    tools:context=".views.EyesActivity">
 
     <me.prapon.aether.vision.CameraSourcePreview
         android:id="@+id/preview"

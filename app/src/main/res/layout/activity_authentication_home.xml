@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@drawable/backdrop"
-    tools:context=".auth.AuthenticationHome">
+    tools:context=".views.auth.AuthenticationHome">
 
     <Button
         android:id="@+id/btn_sign_up"
